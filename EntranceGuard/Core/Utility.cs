@@ -8,42 +8,116 @@
         /// <summary>
         /// 发送命令
         /// </summary>
-        /// <param name="functionID">功能号枚举</param>
+        /// <param name="functionID">功能号</param>
         /// <param name="entrancePORT">controller的端口号</param>
-        /// <returns>返回是否发送成功:-1失败、0成功发送但匹配失败、1成功发送且匹配成功</returns>
-        public static int SendCommandMsg(AppConst.Funtion functionID)
+        public static void SendCommandMsg(AppConst.Funtion functionID)
         {
-            /// 创建报文命令
+            /// 创建报文
             MessageFactory factory = new MessageFactory();
             var msg = factory.CreateMessage(functionID);
-            var cmd = msg.Message;
-
-            /// 门锁主控制
-            WG3000_COMM.Core.wgMjController entranceCtrl = new WG3000_COMM.Core.wgMjController();
-            entranceCtrl.IP = msg.ControllerIP;
-            entranceCtrl.PORT = msg.ControllerPort;
-
-            int ret = 0;
-            byte[] recv = new byte[msg.MessageSize]; // 接收报文
-
-            /// 发送报文
-            if (entranceCtrl.ShortPacketSend(cmd, ref recv) < 0)
-            {
-                // 发送失败
-                FacedeTool.Debug(Controller.Instance,"send cmd failed");
-                ret = -1;
+            if (msg == null){
+                FacadeTool.Debug(Controller.Instance, "no such funtionID");
+                return;
             }
-            else
+
+            var cmd = msg.CmdMsg;                        // byte[]请求报文
+            using (WG3000_COMM.Core.wgMjController entranceCtrl = new WG3000_COMM.Core.wgMjController())
             {
-                // 发送成功, 匹配接收报文信息.
-                if ((recv[0] == msg.MessageType) && (recv[1] == msg.FunctionID))
-                {
-                    ret = 1;
+                byte[] recv = new byte[msg.MessageSize]; // byte[]接收报文
+                entranceCtrl.IP = msg.ControllerIP;      // 配置门锁IP地址
+                entranceCtrl.PORT = msg.ControllerPort;  // 配置门锁Port端口
+
+                if (entranceCtrl.ShortPacketSend(cmd, ref recv) < 0){
+                    // 发送失败.
+                    FacadeTool.Debug(Controller.Instance, "send cmd failed"); 
+                }
+                else{
+                    // 发送成功, 匹配接收报文信息.
+                    if ((recv[0] == msg.MessageType) && (recv[1] == msg.FunctionID)){
+                        msg.HandleReceiveMsg(recv);       // 处理接收的报文
+                    }
                 }
             }
+        }
 
-            entranceCtrl.Dispose();
+        /// <summary>
+        /// 检查控制器配置是否正常.
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckController()
+        {
+            if (string.IsNullOrEmpty(Controller.Instance.ControllerSN)) {
+                System.Windows.Forms.MessageBox.Show("please check the controller has connected network.");
+                return false;
+            }
+
+            else if (string.IsNullOrEmpty(Controller.Instance.Input_ServerPort)){
+                System.Windows.Forms.MessageBox.Show("please complete the Server Port.");
+                return false;
+            }
+
+            else if (string.IsNullOrEmpty(Controller.Instance.Input_ServerIP))
+            {
+                System.Windows.Forms.MessageBox.Show("please complete the Server IP.");
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 自动查找本地服务器IP地址.
+        /// </summary>
+        /// <returns>IP地址</returns>
+        public static string AutoSearchServerIP()
+        {
+            string hostName = System.Net.Dns.GetHostName();
+            bool st = false;
+            string ret = string.Empty;
+
+            // 获取主机的IP地址列表 获取主机的IP地址(只允许Ipv4通过)
+            foreach (System.Net.IPAddress ipAddress in System.Net.Dns.GetHostEntry(hostName).AddressList)
+            {
+                if (ipAddress.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) continue;
+                if (ipAddress.IsIPv6LinkLocal) continue;
+                if (ipAddress.ToString() == "127.0.0.1") continue;
+
+                if (st){
+                    System.Windows.Forms.MessageBox.Show("电脑存在多个IP, 建议只使用一个IP操作, 若无线与网线口同时在用时, 请关键无线口");
+                    ret = string.Empty;
+                    return ret;
+                }
+                
+                st = true; // 连接成功
+                ret = ipAddress.ToString();
+            }
+
+            if (!st) System.Windows.Forms.MessageBox.Show("network is not available.");
             return ret;
+        }
+
+        /// <summary>
+        /// 自动查找控制器SN序列号和控制器IP地址.
+        /// </summary>
+        public static void AutoSerachControllerSNandIP()
+        {
+            using (WG3000_COMM.Core.wgMjController controllers = new WG3000_COMM.Core.wgMjController())
+            {
+                System.Collections.ArrayList arrControllers = new System.Collections.ArrayList();
+                controllers.SearchControlers(ref arrControllers);
+                if (arrControllers != null) {
+                    if (arrControllers.Count <= 0) {
+                        System.Windows.Forms.MessageBox.Show("Not found any controllerSN and controllerIP");
+                        return;
+                    }
+
+                    string[] config = arrControllers[0].ToString().Split(',');
+                    Controller.Instance.ControllerSN = config[0];
+                    Controller.Instance.ControllerIP = config[1];
+
+                    FacadeTool.Debug(Controller.Instance, "controller connected success");
+                }
+            }
         }
     }
 }

@@ -11,8 +11,8 @@ namespace EntranceGuard
         // 功能号
         public enum Funtion : byte
         {
-            REMOTEOPEN = 0x40,   /// 远程开门
-            IPCONFIG = 0x96,     /// 设置控制器IP地址
+            NONE         =  0x00,     /// 无
+            REMOTEOPEN   =  0x40,     /// 远程开门
         }
 
     }

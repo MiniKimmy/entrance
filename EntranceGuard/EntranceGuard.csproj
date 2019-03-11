@@ -59,7 +59,7 @@
     <Compile Include="Test\Controller.Designer.cs">
       <DependentUpon>Controller.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\FacedeTool.cs" />
+    <Compile Include="Core\FacadeTool.cs" />
     <Compile Include="Test\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Utility.cs" />

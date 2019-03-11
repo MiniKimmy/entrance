@@ -177,10 +177,15 @@ namespace EntranceGuard
         private System.Windows.Forms.TextBox input_ServerIP;
         private System.Windows.Forms.Button TestOpen;
 
-        public string Text_ControllerSN { get { return text_ControllerSN.Text; } }
-        public string Text_ControllerIP { get { return text_ControllerIP.Text; } }
+        private string controllerSN = null;
+        public string ControllerSN { get { return controllerSN; } set { controllerSN = value; text_ControllerSN.Text = controllerSN; } }
+
+        private string controllerIP = null;
+        public string ControllerIP { get { return controllerIP; } set { controllerIP = value; text_ControllerIP.Text = controllerIP; } }
+
         public string Input_ServerIP { get { return input_ServerIP.Text; } }
         public string Input_ServerPort { get { return input_ServerPort.Text; } }
+
         public System.Windows.Forms.TextBox ConsoleBox { get { return consoleBox; } }
     }
 }

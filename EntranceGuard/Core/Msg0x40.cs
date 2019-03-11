@@ -10,7 +10,19 @@
         public override void CreateByteMsg()
         {
             base.CreateByteMsg();
-            this.Message[8] = 0x01;
+            this.CmdMsg[8] = 0x01;
+        }
+        
+        public override void HandleReceiveMsg(byte[] recv)
+        {
+            if(recv[8] == 1)
+            {
+                FacadeTool.Debug(Controller.Instance,"remote opendoor:success");
+            }
+            else
+            {
+                FacadeTool.Debug(Controller.Instance, "remote opendoor:failed");
+            }
         }
     }
 }

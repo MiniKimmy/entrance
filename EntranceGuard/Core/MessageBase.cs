@@ -3,7 +3,7 @@
     /// <summary>
     /// 报文数据实体Base类
     /// </summary>
-    class MessageBase 
+    abstract class MessageBase 
     {
         #region
         /*
@@ -38,13 +38,13 @@
         /// 控制器SN(9位数字,占4个byte):[4-7]
         /// </summary>
         private long controllerSN;
-        public long ControllerSN { get { return controllerSN; } set { controllerSN = value; } }
+        public long ControllerSN { get { return controllerSN; } }
 
         /// <summary>
         /// 控制器IP
         /// </summary>
         private string controllerIP;
-        public string ControllerIP { get { return controllerIP; } set { controllerIP = value; } }
+        public string ControllerIP { get { return controllerIP; } }
 
         /// <summary>
         /// 控制器端口号
@@ -53,31 +53,38 @@
         public int ControllerPort { get { return controllerPort; } }
 
         /// <summary>
-        /// bytep[]格式报文
+        /// byte[]格式命令请求报文
         /// </summary>
-        private byte[] message = null;
-        public byte[] Message { get { return message; } protected set { message = value; } }
+        private byte[] cmdMsg = null;
+        public byte[] CmdMsg { get { return cmdMsg; } protected set { cmdMsg = value; } }
 
         public MessageBase() { }
         public MessageBase(int functionID, int controllerPort = AppConst.controllerPort)
         {
             this.functionID = functionID;
             this.controllerPort = controllerPort;
-            this.controllerSN = long.Parse(Controller.Instance.Text_ControllerSN);
-            this.controllerIP = Controller.Instance.Text_ControllerIP;
+            this.controllerSN = long.Parse(Controller.Instance.ControllerSN);
+            this.controllerIP = Controller.Instance.ControllerIP;
 
-            CreateByteMsg(); /// 构造byte[]格式报文
+            CreateByteMsg(); 
         }
 
         /// <summary>
-        /// 构建byte[]格式的报文
+        /// 构建byte[]格式的命令请求报文
         /// </summary>
         public virtual void CreateByteMsg()
         {
-            this.message = new byte[messageSize];
-            this.message[0] = (byte)this.MessageType;
-            this.message[1] = (byte)this.FunctionID;
-            System.Array.Copy(System.BitConverter.GetBytes(controllerSN), 0, this.message, 4, 4);
+            this.cmdMsg = new byte[this.messageSize];
+
+            // [0-7] 默认
+            this.cmdMsg[0] = (byte)this.MessageType;
+            this.cmdMsg[1] = (byte)this.FunctionID;
+            System.Array.Copy(System.BitConverter.GetBytes(controllerSN), 0, this.cmdMsg, 4, 4);
         }
+
+        /// <summary>
+        /// 处理接收报文信息
+        /// </summary>
+        public abstract void HandleReceiveMsg(byte[] recv);
     }
 }
