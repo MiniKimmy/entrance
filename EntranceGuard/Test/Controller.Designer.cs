@@ -6,12 +6,12 @@ namespace EntranceGuard
     partial class Controller
     {
         /// <summary>
-        /// Required designer variable.
+        /// Required designer variable.拥有的设计器变量.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Clean up any resources being used.
+        /// Clean up any resources being used.清理所有使用过的资源.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
@@ -42,15 +42,18 @@ namespace EntranceGuard
             this.input_ServerPort = new System.Windows.Forms.TextBox();
             this.input_ServerIP = new System.Windows.Forms.TextBox();
             this.TestOpen = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // SearchControllerSN
             // 
             this.SearchControllerSN.Location = new System.Drawing.Point(27, 21);
             this.SearchControllerSN.Name = "SearchControllerSN";
-            this.SearchControllerSN.Size = new System.Drawing.Size(151, 23);
+            this.SearchControllerSN.Size = new System.Drawing.Size(180, 23);
             this.SearchControllerSN.TabIndex = 0;
-            this.SearchControllerSN.Text = "搜索控制器SN和IP地址";
+            this.SearchControllerSN.Text = "search controllerSN and IP";
             this.SearchControllerSN.UseVisualStyleBackColor = true;
             this.SearchControllerSN.Click += new System.EventHandler(this.SearchControllerSN_Click);
             // 
@@ -65,10 +68,11 @@ namespace EntranceGuard
             // 
             // consoleBox
             // 
-            this.consoleBox.Location = new System.Drawing.Point(27, 109);
+            this.consoleBox.Location = new System.Drawing.Point(27, 369);
             this.consoleBox.Multiline = true;
             this.consoleBox.Name = "consoleBox";
-            this.consoleBox.Size = new System.Drawing.Size(544, 308);
+            this.consoleBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.consoleBox.Size = new System.Drawing.Size(544, 48);
             this.consoleBox.TabIndex = 7;
             // 
             // text_ControllerSN
@@ -135,15 +139,35 @@ namespace EntranceGuard
             this.TestOpen.Name = "TestOpen";
             this.TestOpen.Size = new System.Drawing.Size(75, 23);
             this.TestOpen.TabIndex = 15;
-            this.TestOpen.Text = "open";
+            this.TestOpen.Text = "testopen";
             this.TestOpen.UseVisualStyleBackColor = true;
             this.TestOpen.Click += new System.EventHandler(this.TestOpen_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(27, 109);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(544, 229);
+            this.pictureBox1.TabIndex = 16;
+            this.pictureBox1.TabStop = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(108, 71);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 17;
+            this.button1.Text = "opencv";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Controller
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(594, 450);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.TestOpen);
             this.Controls.Add(this.input_ServerIP);
             this.Controls.Add(this.input_ServerPort);
@@ -157,7 +181,9 @@ namespace EntranceGuard
             this.Controls.Add(this.SearchControllerSN);
             this.Name = "Controller";
             this.Text = "Controller";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Controller_Destroy);
             this.Load += new System.EventHandler(this.Controller_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,10 +204,13 @@ namespace EntranceGuard
         private System.Windows.Forms.Button TestOpen;
 
         private string controllerSN = null;
-        public string ControllerSN { get { return controllerSN; } set { controllerSN = value; text_ControllerSN.Text = controllerSN; } }
+        public string ControllerSN { get { return controllerSN; } private set { controllerSN = value; text_ControllerSN.Text = controllerSN; } }
 
         private string controllerIP = null;
-        public string ControllerIP { get { return controllerIP; } set { controllerIP = value; text_ControllerIP.Text = controllerIP; } }
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button button1;
+
+        public string ControllerIP { get { return controllerIP; } private set { controllerIP = value; text_ControllerIP.Text = controllerIP; } }
 
         public string Input_ServerIP { get { return input_ServerIP.Text; } }
         public string Input_ServerPort { get { return input_ServerPort.Text; } }

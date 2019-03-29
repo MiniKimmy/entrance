@@ -99,7 +99,8 @@
         /// <summary>
         /// 自动查找控制器SN序列号和控制器IP地址.
         /// </summary>
-        public static void AutoSerachControllerSNandIP()
+        /// <returns>str[0]=sn,str[1]=ip,if error=null</returns>
+        public static string[] AutoSerachControllerSNandIP()
         {
             using (WG3000_COMM.Core.wgMjController controllers = new WG3000_COMM.Core.wgMjController())
             {
@@ -108,16 +109,16 @@
                 if (arrControllers != null) {
                     if (arrControllers.Count <= 0) {
                         System.Windows.Forms.MessageBox.Show("Not found any controllerSN and controllerIP");
-                        return;
+                        return null;
                     }
 
                     string[] config = arrControllers[0].ToString().Split(',');
-                    Controller.Instance.ControllerSN = config[0];
-                    Controller.Instance.ControllerIP = config[1];
-
                     FacadeTool.Debug(Controller.Instance, "controller connected success");
+                    return config;
                 }
             }
+            return null;
         }
+
     }
 }
