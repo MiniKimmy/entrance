@@ -1,49 +1,32 @@
-﻿/// <summary>
-/// 外观者工具类.
-/// </summary>
-namespace EntranceGuard
+﻿namespace EntranceGuard
 {
-    using System;
-
+    /// <summary>
+    /// 外观者工具类.
+    /// </summary>
     class FacadeTool
     {
         private static bool debugMode = true;       // true表示demo测试模式
 
         /// <summary>
-        /// Debug到中间textbox查看信息
+        /// Debug到控制台查看信息
         /// </summary>
-        public static void Debug(Controller controller, string format, params object[] info)
+        public static void Debug(string format, params object[] info)
         {
             if (debugMode)
             {
-                controller.ConsoleBox.AppendText(string.Format(format, info));
-                controller.ConsoleBox.ScrollToCaret();       //滚动到光标处
-                System.Windows.Forms.Application.DoEvents();
+                System.Diagnostics.Debug.WriteLine(format,info);
             }
         }
 
         /// <summary>
-        /// Debug到中间textbox查看信息
+        /// Debug到控制台查看信息
         /// </summary>
-        public static void Debug(Controller controller, string info)
+        public static void Debug(object obj)
         {
             if (debugMode)
             {
-                controller.ConsoleBox.AppendText(string.Format("{0} {1}\r\n", GetCurrentTime(), info));
-                controller.ConsoleBox.ScrollToCaret();
-                System.Windows.Forms.Application.DoEvents();
+                System.Diagnostics.Debug.WriteLine(obj);
             }
         }
-
-        /// <summary>
-        /// 获取当前时间.(默认:hh:mm:ss格式)
-        /// </summary>
-        /// <returns></returns>
-        public static string GetCurrentTime()
-        {
-            return DateTime.Now.ToString("HH:mm:ss");
-        }
-
-
     }
 }

@@ -17,11 +17,11 @@
         {
             if(recv[8] == 1)
             {
-                FacadeTool.Debug(Controller.Instance,"remote opendoor:success");
+                FacadeTool.Debug("remote opendoor:success");
             }
             else
             {
-                FacadeTool.Debug(Controller.Instance, "remote opendoor:failed");
+                FacadeTool.Debug("remote opendoor:failed");
             }
         }
     }

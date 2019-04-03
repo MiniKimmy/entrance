@@ -6,6 +6,7 @@
     class MessageFactory
     {
         public MessageFactory() { }
+
         public MessageBase CreateMessage(AppConst.Funtion functionID)
         {
             MessageBase ret = null;
@@ -13,6 +14,9 @@
             {
                 case AppConst.Funtion.REMOTEOPEN: 
                     ret = new Msg0x40((byte)functionID);
+                    break;
+                case AppConst.Funtion.STATUS:
+                    ret = new Msg0x20((byte)functionID);
                     break;
                 default:
                     break;
