@@ -10,7 +10,7 @@ namespace EntranceGuard
         public static bool isOpenLock = true;                      // 是否使用控制器
         public static bool isOpenCamera = true;                    // 是否使用摄像头
         public static bool isOpenLocalServer = true;               // 是否使用本地ip服务器
-        public static bool isOpenLocalLock = false;                // 是否使用本地ip门锁控制器
+        public static bool isOpenLocalLock = true;                // 是否使用本地ip门锁控制器
         public static double repeatActionDelta = 5.0;              // 重复执行延迟
     
 

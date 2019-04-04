@@ -228,5 +228,39 @@
             t.Start();
             return t;
         }
+
+    
+        /// <summary>
+        /// 自动查找本地服务器IP地址.
+        /// </summary>
+        /// <returns>IP地址</returns>
+        public static string AutoSearchServerIP()
+        {
+            string hostName = System.Net.Dns.GetHostName();
+            bool st = false;
+            string ret = string.Empty;
+
+            // 获取主机的IP地址列表 获取主机的IP地址(只允许Ipv4通过)
+            foreach (System.Net.IPAddress ipAddress in System.Net.Dns.GetHostEntry(hostName).AddressList)
+            {
+                if (ipAddress.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) continue;
+                if (ipAddress.IsIPv6LinkLocal) continue;
+                if (ipAddress.ToString() == "127.0.0.1") continue;
+
+                if (st)
+                {
+                    FacadeTool.Debug("电脑存在多个IP, 建议只使用一个IP操作, 若无线与网线口同时在用时, 请关键无线口");
+                    ret = string.Empty;
+                    return ret;
+                }
+
+                st = true; // 连接成功
+                ret = ipAddress.ToString();
+            }
+
+            if (!st) FacadeTool.Debug("network is not available.");
+            return ret;
+        }
+        
     }
 }

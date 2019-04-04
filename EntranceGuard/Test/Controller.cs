@@ -31,7 +31,7 @@ namespace EntranceGuard
         public static Controller Instance { get { return instance; } }
 
         private List<Task> callbackList;
-        private bool isLockOpenning = false;
+        public bool isLockOpenning = false;
 
         public int requestCount = 0;
         //public const int requestNum = 2;  // 一次最多2个QPS
