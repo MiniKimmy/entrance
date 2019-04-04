@@ -29,11 +29,17 @@ namespace EntranceGuard
 
         private static Controller instance;
         public static Controller Instance { get { return instance; } }
-        private OpencvSharpHelper m_OpencvSharpHelper;  //opencvsharp
 
         private List<Task> callbackList;
-        public bool isLockOpenning = false;
-        //protected readonly object locker = new object();
+        private bool isLockOpenning = false;
+
+        public int requestCount = 0;
+        //public const int requestNum = 2;  // 一次最多2个QPS
+        bool isDetecting = false;
+        CascadeClassifier cascade = new CascadeClassifier(AppConst.HaarCascadeAlt);
+
+        private OpencvSharpHelper m_OpencvSharpHelper;  //opencvsharp
+
 
         /// <summary>
         /// 初始化View层.加载winform
@@ -41,6 +47,7 @@ namespace EntranceGuard
         public Controller()
         {
             InitializeComponent();
+            // 不要写任何初始化,留给"Controller_Load"做.
         }
 
         #region 减少闪烁
@@ -150,37 +157,30 @@ namespace EntranceGuard
             if (AppConst.isOpenLock) callbackList.Add(new Task(() => Utility.RepeatAction(InitLock, AppConst.repeatActionDelta, () => { return this.controllerSN != null && this.controllerIP != null; }, () => { ClearCallbackList(); InitCamera(); })));
             else if (AppConst.isOpenCamera) callbackList.Add(new Task(() => InitCamera()));
 
-            //if (AppConst.isOpenLock) await InitLock1();
-            //if (AppConst.isOpenCamera) callbackList.Add(new Task(() => InitCamera()));
-
+            // 并发执行所有任务
             res = Parallel.ForEach(callbackList, (x) => x.Start());
         }
 
-        
-
-        ParallelLoopResult res;
+        ParallelLoopResult res;  // 平衡并发多线程的结果.
 
         /// <summary>
         /// 清除callbackList
         /// </summary>
         private void ClearCallbackList()
         {
-            if (Utility.CheckEntranceInit() && res.IsCompleted)
-            { 
+            if (Utility.CheckEntranceInit() && res.IsCompleted) { 
                 FacadeTool.Debug("callbackList clear");
                 callbackList.Clear();
             }
-            else
-            {
+            else {
                 FacadeTool.Debug("not completed");
             }
         }
 
-        public int requestCount = 0;
-        //public const int requestNum = 2;  // 一次最多2个QPS
-        bool isDetecting = false;
-        CascadeClassifier cascade = new CascadeClassifier(AppConst.HaarCascadeAlt);
-
+       
+        /// <summary>
+        /// 初始化摄像头
+        /// </summary>
         private void InitCamera()
         {
             if (!AppConst.isOpenCamera) return;
@@ -246,46 +246,6 @@ namespace EntranceGuard
             }
         }
 
-        /// <summary>
-        /// 写入test2019年4月3日21:20:49
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        private Task WriteFile(string path,string content)
-        {
-            var t = new Task(()=>
-            {
-                System.IO.File.WriteAllText(path, content);
-            }
-            );
-            t.Start();
-            return t;
-        }
-
-
-        private Task<bool> DetectFace1(Mat src)
-        {
-            var t = new Task<bool>(() =>
-            {
-                if (isDetecting) return false;
-                isDetecting = true;
-
-                using (var gray = new Mat())
-                {
-                    Cv2.CvtColor(src, gray, ColorConversionCodes.BGR2GRAY);
-                    Rect[] faces = cascade.DetectMultiScale(gray, 1.08, 2, HaarDetectionType.ScaleImage);
-                    FacadeTool.Debug("face count: " + faces.Length);
-
-                    Utility.Invoke(() => { isDetecting = false; }, AppConst.repeatActionDelta);
-                    return faces.Length == 0 ? false : true; ;
-                }
-            });
-
-            t.Start();
-            return t;
-        }
-
         private bool DetectFace(Mat src)
         {
             if (isDetecting) return false;
@@ -296,8 +256,7 @@ namespace EntranceGuard
                 Cv2.CvtColor(src, gray, ColorConversionCodes.BGR2GRAY);
                 Rect[] faces = cascade.DetectMultiScale(gray, 1.08, 2, HaarDetectionType.ScaleImage);
                 FacadeTool.Debug("face count: " + faces.Length);
-
-                Utility.Invoke(() => { isDetecting = false; }, AppConst.repeatActionDelta/2);
+                Utility.Invoke(() => { isDetecting = false; }, AppConst.repeatActionDelta / 2);
                 return faces.Length == 0 ? false : true; ;
             }
         }
@@ -307,18 +266,16 @@ namespace EntranceGuard
         /// </summary>
         private void InitLocalServer()
         {
-            if (AppConst.isOpenLocalServer)
+            if (AppConst.isOpenLocalServer)  //test RPI3B
             {
-                //this.serverIP = "169.254.236.150"; //test local
-                this.serverIP = "192.168.1.108";     //test RPI3B
+                this.serverIP = AppConst.localServerIP;    
                 this.serverPort = AppConst.controllerPort.ToString();
                 return;
             }
 
-            //this.serverIP = Utility.AutoSearchServerIP();
-            //this.serverPort = AppConst.controllerPort.ToString();  // 默认缺省
-
-            //if (serverIP != null) FacadeTool.Debug("serverIP:" + this.serverIP + ",serverPORT:" + this.serverPort);
+            this.serverIP = Utility.AutoSearchServerIP();
+            this.serverPort = AppConst.controllerPort.ToString();  // 默认缺省
+            if (serverIP != null) FacadeTool.Debug("serverIP:" + this.serverIP + ",serverPORT:" + this.serverPort);
         }
 
         /// <summary>

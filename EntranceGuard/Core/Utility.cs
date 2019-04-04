@@ -167,7 +167,6 @@
             }
         }
 
-
         /// <summary>
         /// 获取当前时间.(默认:hh:mm:ss格式)
         /// </summary>
@@ -176,32 +175,6 @@
         {
             return DateTime.Now.ToString("HH:mm:ss");
         }
-
-
-        /*
-         *       public readonly static object locker = new object();
-        /// <summary>
-        /// 监听任务
-        /// </summary>
-        /// <param name="action">监听条件符合后需要执行的操作</param>
-        /// <param name="time">监听间隔时间</param>
-        /// <param name="check">监听条件判断</param>
-        public static T AddListener<T>(Func<T> action, double time, Func<bool> check)
-        {
-            lock (locker)
-            {
-                FacadeTool.Debug("lising");
-                while (true)
-                {
-                    FacadeTool.Debug("checking...");
-                    if (check())
-                    {
-                        FacadeTool.Debug("checkok");
-                        return action();
-                    }
-                }
-            }
-        }*/
 
 
         /// <summary>
@@ -218,16 +191,21 @@
             FacadeTool.Debug("wait " + time);
         }
 
-        private static void Timer1_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+
+        /// <summary>
+        /// 文本内容写入txt(异步调用)
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="content">内容</param>
+        /// <returns></returns>
+        private static Task WriteAllText(string path, string content)
         {
-
-            //自己设置hour,minuter,second,到设定的时间就开始执行程序    
-            //if (intHour == hour && intMinute == minutes && intSecond == second)
-            //{
-            //    //System.Windows.Forms.MessageBox.Show("时间到了！");                        
-            //}
+            var t = new Task(() =>{
+                System.IO.File.WriteAllText(path, content);
+            });
+            t.Start();
+            return t;
         }
-
 
         /// <summary>
         /// 文件图片字节数组转化为BAS64格式
