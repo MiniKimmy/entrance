@@ -4,6 +4,7 @@
 * 请先完成![树莓派环境配置](build_rpi3B.md)
 * 请先完成![树莓派搭建.net环境](build_dotNet.md)
 * 上述2步完成之后，再回来查看该笔记内容.
+* 搭建完opencvsharp环境之后,再查看[使用vs开发、发布到树莓派环境运行](build_dotNet.md)
 
 #### 前言
 * 如果想一次性搭建成功，切记，一条一条命令输入,不要心急,不能出错，安装一次要3~4h！！
@@ -20,8 +21,6 @@
 * opencv_contrib-3.4.1.zip
 * mono 3.2.8 (支持.net framework 4.5, 不支持.net framework 4.6.1)
 * 该笔记2019年4月,亲测opencv-4.0.0的版本太高不能安装到Ubuntu MATE 16.04,而3.4.1是可以的.而其他opencv历史版本未试过.建议先尝试走一遍3.4.1版本再自行尝试更新的版本
-* vs2017(安装.NET桌面开发；安装框架.NET Framework 4.5目标包【项目里不要使用.net .NET 4.6因为apt下载的mono不支持】)
-* 下载opencvsharp-AnyCPU的对应3.4.1-20180319版本的.nuget包:[nuget官网](https://www.nuget.org/)
 * 请最后先和我上面的环境保持一致之后，再进行opencvsharp搭建
 
 * * *
@@ -32,7 +31,7 @@
 * 接下里的命令"下载依赖包、下载opencv、下载opencv_contrib、下载opencvsharp"可以直接copy，中途需要切root管理员还是切回用户的都照我命令输入即可
 * 最终所有东西都安装到 "/usr/local/opencv/"文件夹里
 * 先在“/usr/local/”里创建"opencv"的文件夹
-```
+``` c
 cd /usr/local/
 su root    // 切换管理员
 mkdir opencv
@@ -42,7 +41,7 @@ cd ~       // 回到"~"目录下
 ##### 下载依赖包
 * 中途遇到的y/n都选"y"
 * 一条一条命令输入,每条命令输2次,出现“xxx  is already the newest version 则表示成功”
-```
+``` c
 sudo apt-get install -y build-essential
 sudo apt-get install -y cmake
 sudo apt-get install -y libgtkglext1-dev
@@ -82,7 +81,7 @@ sudo apt-get install -y python3-numpy
 sudo apt-get install -y libhdf5-dev
 sudo apt-get install -y libtiff5-dev
 # sudo apt-get install -y libtiffxx0c2 # 这个依赖包可以无(因为Not Found)
-```
+``` c
 ##### 下载opencv [OPENCV_VERSION=3.4.1]
 * 打开控制台,默认下载到"~"的目录
 * 如果不下载3.4.1版本,则可以套用以下句型,把‘${OPENCV_VERSION}’替换成版本‘4.0.0’
@@ -94,7 +93,7 @@ su pi    // “pi” 是用户名,切换回普通用户.
 cd ~     // 以普通用户回到"~"的目录下
 ```
 * 以下命令是下载opencv-3.4.1版本
-```
+``` c
 wget https://github.com/opencv/opencv/archive/3.4.1.zip && unzip 3.4.1.zip && rm 3.4.1.zip
 su root // 切换管理员
 mv opencv-3.4.1/ /usr/local/opencv/OpenCV
@@ -104,7 +103,7 @@ cd ~     // 以普通用户回到"~"的目录下
 ##### 下载opencv_contrib [OPENCV_VERSION=3.4.1]
 * 打开控制台,默认先下载到"~"的目录，然后mv到"/usr/local/opencv/"里,
 * 如果不下载3.4.1版本,则可以套用以下句型,把‘${OPENCV_VERSION}’替换成版本‘4.0.0’
-```
+``` c
 wget https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip && unzip ${OPENCV_VERSION}.zip && rm ${OPENCV_VERSION}.zip
 su root   // 切换成管理员
 mv opencv_contrib-${OPENCV_VERSION} /usr/local/opencv/OpenCV_contrib
@@ -112,7 +111,7 @@ su pi
 su ~
 ```
 * 以下命令是下载opencv_contrib-3.4.1版本
-```
+``` c
 wget https://github.com/opencv/opencv_contrib/archive/3.4.1.zip && unzip 4.0.0.zip && rm 3.4.1.zip
 su root    // 切换成管理员
 mv opencv_contrib-3.4.1 /usr/local/opencv/OpenCV_contrib
@@ -122,7 +121,7 @@ su ~       // 以普通用户回到"~"的目录下
 ##### 编译opencv
 * 注意cmake 最后面是2个点‘..’
 * cmake 那段命令有点长，一次性copy可能不允许,可以分几次copy
-```
+``` c
 cd /usr/local/opencv/OpenCV
 su root
 mkdir build
@@ -133,7 +132,7 @@ sudo make install && ldconfig
 ```
 ##### 下载opencvsharp [OPENCVSHARP_VERSION=3.4.1.20180320]
 * 先下载安装好opencv再下载暗转opencvsharp,如果opencv未安装成功则不要安装opencvsharp
-```
+``` c
 cd /usr/local/opencv/
 su root
 git clone https://github.com/shimat/opencvsharp.git
@@ -141,11 +140,11 @@ cd opencvsharp
 ```
 * 如果不下载3.4.1版本,可以套下面的命令，将'${OPENCVSHARP_VERSION}'替换成'4.0.0.20181130'
 * 至于这个‘3.4.1.20180320’是到opencvsharp的github去[查看这里](https://github.com/shimat/opencvsharp)
-```
+``` c
 git fetch --all --tags --prune && git checkout tags/${OPENCVSHARP_VERSION}
 ```
 * 以下是下载opencvsharp-3.4.1.20180320版本
-```
+``` c
 git fetch --all --tags --prune && git checkout tags/3.4.1.20180320
 su pi
 cd ~
@@ -167,7 +166,7 @@ sudo make install
     * 当然,如果你觉得直接copy到/usr/lib/文件夹也ok
     * 参考命令：cp <文件A路径> <要移动到的目标文件夹路径>
     * 参考命令: cp  -r <文件夹A路径> <要移动到的目标文件夹路径>
-```
+``` c
 cd Desktop
 mkdir opencvlib   // 先在Desktop里创建一个叫"opencvlib"文件夹
 cd opencvlib

@@ -42,6 +42,10 @@
 
 ##### 搭建环境
 * ![树莓派环境配置](FacialRecognitionLock/Docs/build_rpi3B.md)
-* ![树莓派搭建opencvsharp环境](FacialRecognitionLock/Docs/build_openCVSharp.md)
 * ![树莓派搭建.net环境](FacialRecognitionLock/Docs/build_dotNet.md)
+* ![树莓派搭建ssh文件传输环境](FacialRecognitionLock/Docs/build_sshShell.md)
+* ![树莓派搭建opencvsharp环境](FacialRecognitionLock/Docs/build_openCVSharp.md)
+
+##### 准备开发
+[使用vs开发、发布到树莓派环境运行]((FacialRecognitionLock/Docs/build_app.md))
 
