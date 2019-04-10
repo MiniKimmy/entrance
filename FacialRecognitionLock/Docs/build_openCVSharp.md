@@ -4,7 +4,7 @@
 * 请先完成![树莓派环境配置](build_rpi3B.md)
 * 请先完成![树莓派搭建.net环境](build_dotNet.md)
 * 上述2步完成之后，再回来查看该笔记内容.
-* 搭建完opencvsharp环境之后,再查看[使用vs开发、发布到树莓派环境运行](build_dotNet.md)
+* 搭建完opencvsharp环境之后,再查看[使用vs开发、发布到树莓派环境运行](build_app.md)
 
 #### 前言
 * 如果想一次性搭建成功，切记，一条一条命令输入,不要心急,不能出错，安装一次要3~4h！！
@@ -80,12 +80,12 @@ sudo apt-get install -y python3-tk
 sudo apt-get install -y python3-numpy
 sudo apt-get install -y libhdf5-dev
 sudo apt-get install -y libtiff5-dev
-# sudo apt-get install -y libtiffxx0c2 # 这个依赖包可以无(因为Not Found)
-``` c
+sudo apt-get install -y libtiffxx0c2  // 这个依赖包可以无(因为Not Found)
+```
 ##### 下载opencv [OPENCV_VERSION=3.4.1]
 * 打开控制台,默认下载到"~"的目录
 * 如果不下载3.4.1版本,则可以套用以下句型,把‘${OPENCV_VERSION}’替换成版本‘4.0.0’
-```
+``` c
 wget  ${OPENCV_VERSION}.zip && unzip ${OPENCV_VERSION}.zip && rm ${OPENCV_VERSION}.zip
 su root  // 切换管理员
 mv opencv-${OPENCV_VERSION} /usr/local/opencv/OpenCV
@@ -193,3 +193,21 @@ su pi
 su ~
 ```
 
+###### 搭建opencvsharp参考链接
+* [#377](https://github.com/shimat/opencvsharp/issues/377),[#388](https://github.com/shimat/opencvsharp/issues/388),[#400](https://github.com/shimat/opencvsharp/issues/400),[#476](https://github.com/shimat/opencvsharp/issues/476),[songxingzhu帖](https://www.cnblogs.com/songxingzhu/p/9698020.html)
+
+#### 卸载opencv
+* 不要手动rm
+* 首先要找到当初安装opencv的build目录，进入该build目录执行卸载操作(这种是已经搭建好opencv环境之后的卸载)
+``` c
+sudo make uninstall
+cd  ..
+rm -r build
+```
+* 若安装到某一步出错不想继续，想卸载所有opencv的文件的命令如下
+``` c
+rm -r /usr/local/include/opencv2 /usr/local/include/opencv /usr/include/opencv /usr/include/opencv2 /usr/local/share/opencv /usr/local/share/OpenCV /usr/share/opencv /usr/share/OpenCV /usr/local/bin/opencv* /usr/local/lib/libopencv*
+cd /usr
+find . -name "*opencv*" | xargs sudo rm -rf
+```
+* 最后只能建议砍掉重练，重新烧写系统，再次重新搭建opencvsharp.

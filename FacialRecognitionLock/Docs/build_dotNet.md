@@ -5,7 +5,7 @@
 
 ##### 下载mono
 * 打开控制台,输入以下命令
-```
+``` c
 sudo apt-get install mono-complete
 mono -V    // 有信息则表示安装mono成功
 ```

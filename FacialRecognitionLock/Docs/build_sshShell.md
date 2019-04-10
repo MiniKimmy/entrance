@@ -24,15 +24,21 @@ KexAlgorithms diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hell
 sudo /etc/init.d/ssh restart
 ```
 * 参考如下
-<img src="https://raw.githubusercontent.com/MiniKimmy/entrance
-/FacialRecognitionLock/FacialRecognitionLock/Docs/resources/buildRPI3B/sshClientConfig.png?raw=true" alt="can't find .png" width="800px">
+<img src="https://raw.githubusercontent.com/MiniKimmy/entrance/master/FacialRecognitionLock/Docs/resources/buildRPI3B/sshClientConfig.png" alt="can't find .png" width="800px">
+
+
 
 ##### 使用ssh文件传输软件
 * 先启动树莓派，再sshClient软件登录树莓派
 
-<img src="https://raw.githubusercontent.com/MiniKimmy/entrance
-/FacialRecognitionLock/FacialRecognitionLock/Docs/resources/buildRPI3B/sshClientLogin.png?raw=true" alt="can't find .png" width="800px">
+<img src="https://raw.githubusercontent.com/MiniKimmy/entrance/master/FacialRecognitionLock/Docs/resources/buildRPI3B/sshClientLogin.png?" alt="can't find .png" width="800px">
 
-* 远程传输文件
+* 远程传输文件的按钮
 <img src="https://raw.githubusercontent.com/MiniKimmy/entrance
 /FacialRecognitionLock/FacialRecognitionLock/Docs/resources/buildRPI3B/sshClientUI.png?raw=true" alt="can't find .png" width="800px">
+
+* 使用拖拽的方式互传文件
+    * 如果想拖拽到root的文件夹的话，建议先拖拽到"~"文件夹,再通过命令行启动管理员身份"mv"过去
+
+<img src="https://raw.githubusercontent.com/MiniKimmy/entrance/master/FacialRecognitionLock/Docs/resources/buildRPI3B/sshClientIO.png?" alt="can't find .png" width="800px">
+

@@ -19,7 +19,7 @@
 ###### 开启ssh
 * [参考](https://blog.csdn.net/wuleiming2009/article/details/78918950)
 * 打开控制台(快捷键ctrl+alt+t),输入以下命令
-```
+``` c
 sudo raspi-config    // 选择第3项"internet options" ->选择第二项ssh->开启yes
 ps -e | grep ssh     // 看到sshd则表示开启成功
 sudo passwd root     // 先更改密码(最好使用"raspberry"作为密码,以免忘记)
@@ -32,7 +32,7 @@ sudo service ssh restart // 重启SSH服务
 * [参考](https://blog.csdn.net/qq_25556149/article/details/82216190)
 * 用于windows在win+R使用"mstsc",输入RPI3B的ip地址来远程桌面
 * 打开控制台(ctrl+alt+t),输入以下命令
-```
+``` c
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get install tightvncserver xrdp
@@ -42,7 +42,7 @@ sudo apt-get install tightvncserver xrdp
 * [参考](https://blog.csdn.net/qq_25556149/article/details/82216190)
 * 亲测好像不行.但是还是照做了.
 * 打开控制台（ctrl+alt+t）,输入以下命令
-```
+``` c
 sudo apt install gedit
 sudo gedit /etc/rc.local
 添加：rfkill block bluetooth  // 找到最后一行"exit 0" 的上面，使用菜单栏的“Save”，保存
@@ -58,21 +58,21 @@ sudo reboot                   // 然后重启树莓派看看是否还有蓝牙
 
 ###### 设置wifi(使用控制台设置的方式)
 * 最好先下载vim、gedit编辑,后期有用
-```
+``` c
 sudo apt-get install vim
 sudo apt install gedit
 ```
 * 打开控制台,输入以下命令
-```
+``` c
 sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
 
 vim编辑里添加wifi配置信息：
 network={
-    ssid="aaaaaa"   #ssid:Wifi的名字
-    psk="123456"    #psk:wifi密码
+    ssid="aaaaaa"   // ssid:Wifi的名字
+    psk="123456"    // psk:wifi密码
     key_mgmt=WPA-PSK
-    scan_ssid=1     #scan_ssid:连接隐藏WiFi时需要指定该值为1
-    priority=1      #priority:连接优先级，数字越大优先级越高（不可以是负数）
+    scan_ssid=1     // scan_ssid:连接隐藏WiFi时需要指定该值为1
+    priority=1      // priority:连接优先级，数字越大优先级越高（不可以是负数）
 }
 ```
 
