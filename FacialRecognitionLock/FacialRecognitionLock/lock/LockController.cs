@@ -15,20 +15,12 @@
             REMOTEOPEN = 0x40,     /// 远程开门
         }
 
-        // Test Local
+        // Test Local (本地测试)
         private static string sn = "123329697";      // lock sn(本地测试)
         private static string ip = "192.168.1.120";  // lock ip(本地测试)
 
-        // singleton pattern
         private static LockController instance = null;
-        public static LockController Instance
-        {
-            get
-            {
-                if(instance == null) instance = new LockController();
-                return instance; 
-            }
-        }
+        public static LockController Instance { get { if (instance == null) instance = new LockController(); return instance; } }
 
         private string controllerSN = null;
         private string controllerIP = null;
@@ -61,9 +53,9 @@
             if (!Utility.CheckNetwork()) {
                 FacadeTool.Debug("network is unavailable");
                 return;
-            }                   
+            }
 
-            //Test Local
+            //Test Local(本地测试)
             if (AppConst.isOpenLocalServer) {
                 this.serverIP = AppConst.localServerIP;
                 if(this.serverPort ==null) this.serverPort = AppConst.serverPort;
@@ -82,7 +74,7 @@
         {
             if (!AppConst.isOpenLock) return;
 
-            //Test Local 
+            //Test Local(本地测试)
             if (AppConst.isOpenLocalLock)
             {
                 this.controllerSN = sn;   // lock sn
@@ -116,13 +108,10 @@
         /// </summary>
         private void ClearCallbackList()
         {
-            if (this.CheckLockInit() && m_parallelLoopResult.IsCompleted)
-            {
+            if (this.CheckLockInit() && m_parallelLoopResult.IsCompleted) {
                 FacadeTool.Debug("callbackList clear");
                 callbackList.Clear();
-            }
-            else
-            {
+            } else {
                 FacadeTool.Debug("not completed");
             }
         }

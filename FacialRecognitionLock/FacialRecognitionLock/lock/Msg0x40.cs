@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FacialRecognitionLock
+﻿namespace FacialRecognitionLock
 {
     /// <summary>
     /// 远程开门:0x40
@@ -21,12 +15,10 @@ namespace FacialRecognitionLock
 
         public override void HandleReceiveMsg(byte[] recv)
         {
-            if (recv[8] == 1)
-            {
+            // 发送报文时已通知打开,返回信息处理仅显示开门信息.
+            if (recv[8] == 1) {
                 FacadeTool.Debug("remote opendoor:success");
-            }
-            else
-            {
+            } else {
                 FacadeTool.Debug("remote opendoor:failed");
             }
         }

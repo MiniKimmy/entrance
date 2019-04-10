@@ -32,10 +32,9 @@
 
             if (entranceCtrl.ShortPacketSend(cmd, ref recv) < 0)
             {
-                FacadeTool.Debug("send cmd failed"); // 发送失败.
+                FacadeTool.Debug("send cmd failed"); // 发送失败
             }
-            else
-            {
+            else {
                 // 发送成功, 匹配接收报文信息.
                 if ((recv[0] == msg.MessageType) && (recv[1] == msg.FunctionID))
                 {
@@ -80,10 +79,9 @@
         /// <summary>
         /// 检测网络连接是否正常
         /// </summary>
-        /// <returns></returns>
         public static bool CheckNetwork()
         {
-            string url = "http://www.baidu.com";
+            string url = "http://www.baidu.com"; // 随便访问一个网址.
             try {
                 System.Net.WebRequest myRequest = System.Net.WebRequest.Create(url);
                 System.Net.WebResponse myResponse = myRequest.GetResponse();
@@ -172,7 +170,6 @@
         /// </summary>
         /// <param name="path">文件路径</param>
         /// <param name="content">内容</param>
-        /// <returns></returns>
         private static Task WriteAllText(string path, string content)
         {
             var t = new Task(() => {
@@ -183,21 +180,19 @@
         }
 
         /// <summary>
-        /// 文件图片字节数组转化为BAS64格式
+        /// 文件图片字节数组转化为BAS64格式(sync)
         /// </summary>
         /// <param name="image"></param>
-        /// <returns></returns>
         public static string GetBASE64(byte[] image)
         {
             return Convert.ToBase64String(image);
         }
 
         /// <summary>
-        /// 文件图片字节数组转化为BAS64格式
+        /// 文件图片字节数组转化为BAS64格式(async)
         /// </summary>
         /// <param name="image"></param>
-        /// <returns></returns>
-        public static Task<string> GetBASE64_2(byte[] image)
+        public static Task<string> GetBASE64Async(byte[] image)
         {
             var t = new Task<string>(() => Convert.ToBase64String(image));
             t.Start();

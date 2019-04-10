@@ -11,19 +11,20 @@
     class OpencvSharpHelper : IExecute
     {
         private int sleepTime;                      // 视频流静息间断时间(毫秒)
-        private const int requestTimeout = 60000;   // 1min limit请求超时
+        private const int requestTimeout = 60000;   // 1min请求超时
         private const double scaleFactor = 1.08;    // 检测规模大小                     
         private const int minNeighbors = 2;         // 检测至少人脸个数
         public const int standardCaptureScore = 80; // 人脸捕捉符合标准分数
         private bool isDetecting;                   // 是否正在人脸检测
         private double delayCapture = 2;            // 捕捉视频流帧的延迟
-        //private const int requestNum = 2;         // 一次最多2个QPS
+        private int width = 640;                    // 分辨率width
+        private int height = 320;                   // 分辨率height
 
         private string appid;                       // APPID
         private string apiKey;                      // AK
         private string secretKey;                   // SK
         private Baidu.Aip.Face.Face client;         // 人脸识别api
-        private CascadeClassifier HaarCascade;      // 人脸检测HaarCascade算法xml配置
+        private CascadeClassifier HaarCascade;      // 人脸检测Haar算法xml配置
 
         public OpencvSharpHelper()
         {
@@ -47,12 +48,12 @@
             if (!AppConst.isOpenCamera) return;
 
             var capture = new VideoCapture(CaptureDevice.Any);
-            capture.Set(CaptureProperty.FrameWidth, 640);
-            capture.Set(CaptureProperty.FrameHeight, 320);
+            capture.Set(CaptureProperty.FrameWidth, this.width);
+            capture.Set(CaptureProperty.FrameHeight, this.height);
             capture.AutoFocus = true;
 
             Mat image = new Mat();   // Frame image buffer
-            while (true)             // When the movie playback reaches end, Mat.data becomes NULL.
+            while (true)             
             {
                 capture.Read(image);
                 Cv2.ImShow("capture", image);
@@ -65,17 +66,17 @@
                     {
                         using (Mat src = capture.RetrieveMat())
                         {
-                            var img = await Utility.GetBASE64_2(src.ToBytes());
-                            //var img = Utility.GetBASE64(src.ToBytes());    
-                            //await CaptureRequestHandle(img);
-                            CaptureRequestHandle1(img);
+                            // 图片转化为BASE64格式.
+                            var img = await Utility.GetBASE64Async(src.ToBytes());  // Async
+                            //var img = Utility.GetBASE64(src.ToBytes());           // Synchronous
+
+                            // 请求百度API并处理返回信息.
+                            //await CaptureRequestHandleAsync(img);
+                            CaptureRequestHandle(img);
                         }
                     });
 
-                    t.ContinueWith((x) =>
-                    {
-                        System.GC.Collect();
-                    });
+                    t.ContinueWith((x) => { System.GC.Collect(); });
                 }
 
                 System.GC.Collect();
@@ -86,7 +87,7 @@
         /// <summary>
         /// 人脸对比返回信息处理
         /// </summary>
-        private void CaptureRequestHandle1(string image)
+        private void CaptureRequestHandle(string image)
         {
             var check = this.SearchFace(image);
             if (check && AppConst.isOpenLock)
@@ -99,9 +100,9 @@
         }
 
         /// <summary>
-        /// 人脸对比返回信息处理
+        /// 人脸对比返回信息处理(Async)
         /// </summary>
-        private Task CaptureRequestHandle(string image)
+        private Task CaptureRequestHandleAsync(string image)
         {
             var t = new Task(() =>
             {
@@ -123,7 +124,6 @@
         /// 人脸检测
         /// </summary>
         /// <param name="src">视频流捕捉的某一帧的画面</param>
-        /// <returns></returns>
         public bool DetectFace(Mat src, double captureDelay)
         {
             if (isDetecting) return false;
@@ -149,10 +149,9 @@
         /// <param name="groupIdList">人脸库组</param>
         /// <param name="imageType">图片格式(默认:BASE64)</param>
         /// <param name="options">可选属性(默认:活体检测、图片高质量)</param>
-        /// <returns></returns>
         private bool SearchFace(string img, string groupIdList = "test1,test", string imageType = "BASE64", System.Collections.Generic.Dictionary<string, object> options = null)
         {
-            /*
+            
             if(options == null)
             {
                 options = new System.Collections.Generic.Dictionary<string, object>{
@@ -161,7 +160,6 @@
                 };
               
             }
-            */
 
             var result = client.Search(img, imageType, groupIdList, options);
             if ((string)result["error_msg"] != "SUCCESS") return false;
@@ -178,6 +176,9 @@
             }
 
             FacadeTool.Debug(result);
+
+            // 在RPI3B里查看返回的json信息.
+            //System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", result.ToString());
             return score < standardCaptureScore ? false : true;
         }
 
