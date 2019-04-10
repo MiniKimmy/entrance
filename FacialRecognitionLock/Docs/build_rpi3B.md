@@ -81,5 +81,5 @@ network={
 * 点install安装中文
 * 然后拖拽“中文”到顶部最上面。
 * 然后Apply一下
-* 控制台输入:sudo reboot // 重启即可.
+* 控制台输入:sudo reboot ,重启即可.
 

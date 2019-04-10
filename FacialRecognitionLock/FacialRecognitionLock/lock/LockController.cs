@@ -6,7 +6,7 @@
     /// <summary>
     /// lock控制器
     /// </summary>
-    class LockController :IExecute
+    class LockController : IExecute
     {
         public enum Funtion : byte // 门锁协议功能号
         {

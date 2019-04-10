@@ -48,3 +48,4 @@
 ##### 准备开发
 * ![使用vs开发、发布到树莓派环境运行](FacialRecognitionLock/Docs/build_app.md)
 * ![学习并使用opencvsharp进行开发](FacialRecognitionLock/Docs/study_opencvsharp.md)
+* ![学习并使用百度人脸识别sdk](FacialRecognitionLock/Docs/study_baiduFACESDK.md)

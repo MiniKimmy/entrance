@@ -1,4 +1,5 @@
 ### 树莓派搭建opencvsharp环境
+* 注:下文中出现的 "//"、"#"、"--" 都是注释,只是解释说明
 
 #### 请按照和我一样的环境
 * 请先完成![树莓派环境配置](build_rpi3B.md)
@@ -27,9 +28,8 @@
 
 #### 在RPI3B搭建opencvsharp环境
 * 可以使用RPI3B+显示器+鼠标键盘的方式去操作控制台；也可以mstsc作RPI3B控制台(推荐)
-* 所有的"//"、"#"、"--" 都是注释内容，只是解释说明。
 * 接下里的命令"下载依赖包、下载opencv、下载opencv_contrib、下载opencvsharp"可以直接copy，中途需要切root管理员还是切回用户的都照我命令输入即可
-* 最终所有东西都安装到 "/usr/local/opencv/"文件夹里
+* 最终所有东西都安装到 "/usr/local/opencv/"文件夹里(建议先跟我走一遍之后,再下载新版本时自行安装到自己想要的位置)
 * 先在“/usr/local/”里创建"opencv"的文件夹
 ``` c
 cd /usr/local/
@@ -38,7 +38,7 @@ mkdir opencv
 su pi      // 切回普通用户
 cd ~       // 回到"~"目录下
 ```
-##### 下载依赖包
+##### 下载opencv依赖包
 * 中途遇到的y/n都选"y"
 * 一条一条命令输入,每条命令输2次,出现“xxx  is already the newest version 则表示成功”
 ``` c
