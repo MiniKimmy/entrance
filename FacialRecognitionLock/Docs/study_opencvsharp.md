@@ -16,7 +16,7 @@ VideoWriterSample   // 录制视频
 MatToBitmap         // 图片格式转化
 ```
 
-##### 几个常用的opencv函数
+##### 几个常用的opencvsharp函数
 ``` csharp
 // 变成灰色图片
 Cv2.CvtColor(src, gray, ColorConversionCodes.BGR2GRAY);

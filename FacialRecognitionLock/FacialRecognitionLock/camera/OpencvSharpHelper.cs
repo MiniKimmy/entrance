@@ -195,7 +195,7 @@
             FacadeTool.Debug(result);
 
             // 在RPI3B里查看返回的json信息.
-            // System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", result.ToString());
+            if(AppConst.isDebugMode) System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", result.ToString());
             return score < std_CaptureScore ? false : true;
         }
 
@@ -243,13 +243,14 @@
             
                 }
             };
-
+             
             var result = this.client.Faceverify(faces);
+            //FacadeTool.Debug(result);
             if ((string)result["error_msg"] != "SUCCESS") return false;
             if (result["result"].HasValues)
             {
-                var res = (float)result["result"]["std_face_liveness"];
-                return res >= 0.9 ? true : false;
+                var res = (float)result["result"]["face_liveness"];
+                return res >= std_face_liveness ? true : false;
             }
 
             return false;

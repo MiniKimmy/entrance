@@ -17,7 +17,7 @@
 
         // Test Local (本地测试)
         private static string sn = "123329697";      // lock sn(本地测试)
-        private static string ip = "192.168.1.120";  // lock ip(本地测试)
+        private static string ip = "192.168.43.150";  // lock ip(本地测试)
 
         private static LockController instance = null;
         public static LockController Instance { get { if (instance == null) instance = new LockController(); return instance; } }
@@ -52,6 +52,8 @@
         {
             if (!Utility.CheckNetwork()) {
                 FacadeTool.Debug("network is unavailable");
+                if (AppConst.isDebugMode)
+                    System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", "network is unaviable!");
                 return;
             }
 
@@ -64,7 +66,8 @@
 
             this.serverIP = Utility.AutoSearchServerIP();
             if (this.serverPort == null) this.serverPort = AppConst.serverPort;
-            if (serverIP != null) FacadeTool.Debug("serverIP:" + this.serverIP + ",serverPORT:" + this.serverPort);
+            if (serverIP != null ) FacadeTool.Debug("serverIP:" + this.serverIP + ",serverPORT:" + this.serverPort);
+            if (AppConst.isDebugMode)  System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", "serverIP:" + this.serverIP + ",serverPORT:" + this.serverPort);
         }
 
         /// <summary>
@@ -96,22 +99,22 @@
         /// </summary>
         private bool CheckLockInit()
         {
-            if ((string.IsNullOrEmpty(this.ControllerSN) && AppConst.isOpenLock) ||
-                string.IsNullOrEmpty(this.ServerIP))
-                    return false;
-
-            return true;
+            if (string.IsNullOrEmpty(this.ControllerSN) || string.IsNullOrEmpty(this.ServerIP)) return false;
+            else return true;
         }
-        
+
         /// <summary>
         /// 清除callbackList
         /// </summary>
         private void ClearCallbackList()
         {
-            if (this.CheckLockInit() && m_parallelLoopResult.IsCompleted) {
+            if (this.CheckLockInit() && m_parallelLoopResult.IsCompleted)
+            {
                 FacadeTool.Debug("callbackList clear");
                 callbackList.Clear();
-            } else {
+            }
+            else
+            {
                 FacadeTool.Debug("not completed");
             }
         }
@@ -128,20 +131,25 @@
             this.serverIP = null;
             this.serverPort = null;
 
+            // 新版的n3kAdrtC.dll V3.6.3 使用同步才会正常.
+            InitLocalServer();
+            InitLock();
+
+            /* V3.6 使用并发子线程的方式.旧版已过期
             // 间隔时间重复发出初始化本地网络配置请求.
-            callbackList.Add(new Task(() => 
-            Utility.RepeatAction(InitLocalServer, AppConst.repeatActionDelta, 
-                () => { return this.serverIP != null; },
-                ClearCallbackList)));
+            callbackList.Add(new Task(() =>
+            Utility.RepeatAction(InitLocalServer, AppConst.repeatActionDelta,
+                () => { return this.serverIP != null && this.serverPort != null; }, ClearCallbackList)));
 
             // 间隔时间重复发出初始化门锁控制器请求.
-            if (AppConst.isOpenLock) callbackList.Add(new Task(() => 
-                Utility.RepeatAction(InitLock, AppConst.repeatActionDelta, 
-                () => { return this.controllerSN != null && this.controllerIP != null; }, 
+            if (AppConst.isOpenLock) callbackList.Add(new Task(() =>
+                Utility.RepeatAction(InitLock, AppConst.repeatActionDelta,
+                () => { return this.controllerSN != null && this.controllerIP != null; },
                 ClearCallbackList)));
 
             // 并发执行所有任务
             m_parallelLoopResult = Parallel.ForEach(callbackList, (x) => x.Start());
+            */
         }
     }
 }

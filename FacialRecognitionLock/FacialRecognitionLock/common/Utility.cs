@@ -33,6 +33,8 @@
             if (entranceCtrl.ShortPacketSend(cmd, ref recv) < 0)
             {
                 FacadeTool.Debug("send cmd failed"); // 发送失败
+                if (AppConst.isDebugMode)
+                    System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + "send cmd failed.txt", "send cmd failed");
             }
             else {
                 // 发送成功, 匹配接收报文信息.
@@ -62,6 +64,11 @@
 
                 if (st)
                 {
+                    if (AppConst.isOpenLocalServer)
+                    {
+                        return AppConst.localServerIP; 
+                    }
+
                     FacadeTool.Debug("local server has more than one IP, if use WIFI and Ethernet at the same time,please close WIFI");
                     ret = null;
                     return ret;
@@ -108,11 +115,13 @@
             if (arrControllers == null || arrControllers.Count <= 0)
             {
                 FacadeTool.Debug("Not found any controllerSN and controllerIP");
+                if (AppConst.isDebugMode) System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", "controllerSN is not ok");
                 return null;
             }
 
             string[] config = arrControllers[0].ToString().Split(',');
             FacadeTool.Debug("controller connected success");
+            if (AppConst.isDebugMode) System.IO.File.WriteAllText(System.AppDomain.CurrentDomain.BaseDirectory + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ff") + ".txt", "sn= " + config[0] + " ip=" + config[1]);
             return config;
         }
 
@@ -125,19 +134,20 @@
         /// <param name="callback">回调方法</param>
         public static async void RepeatAction(Action action, double time, Func<bool> check, Action callback = null)
         {
+            System.Threading.CancellationToken token = new System.Threading.CancellationToken();
             while (true)
             {
-                using (Task t = new Task(action))
-                {
-                    t.Start();
-                    await Task.Delay(TimeSpan.FromSeconds(time));
-                    FacadeTool.Debug("repeat not ok");
-                }
-
                 if (check()) {
                     FacadeTool.Debug("check ok");
-                    if (callback != null) callback();
+                    if (callback != null && token.CanBeCanceled) callback();
                     break;
+                }
+                else
+                {
+                    Task t = new Task(action, token);
+                    await Task.Delay(TimeSpan.FromSeconds(time));
+                    FacadeTool.Debug("repeat not ok");
+                    t.Start();
                 }
             }
         }

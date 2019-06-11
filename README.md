@@ -10,7 +10,7 @@
 * 2019年3月6日18:30:49 远程开门测试完毕.门锁sdk基于.net framework,因此需要搭建.net的开发环境.
 * 2019年3月10日01:09:01 win10Iot无法正常调用外部.dll文件，终止在win10iot上开发此项目.
 * 2019年3月11日23:33:34 RPI3B搭建.net环境成功.使用mono方式运行.exe程序.
-* 2019年3月2i日17:28:12 RPI3B的镜像Yahboom-Raspibian由于太大,占用了8G空间无法正常安装opencvsharp.需要换系统.
+* 2019年3月21日17:28:12 RPI3B的镜像Yahboom-Raspibian由于太大,占用了8G空间无法正常安装opencvsharp.需要换系统.
 * 2019年3月28日00:31:27 RPI3B的官方镜像2017-03-Raspibian-jessie，由于软件源太少经常缺各种包无法正常安装opencvsharp.继续换系统
 * 2019年3月29日06:58:29 改用ubuntu mate 16.04作为RPI3B系统.解决软件源不足或下载源速度慢问题.
 * 2019年3月30日00:37:03 基于utuntu mate 16.04系统RPI3B搭建opencvsharp-3.4.1成功.而opencvsharp-4.0.0搭建失败,不过旧版的3.4.1不影响正常使用摄像头.
@@ -27,6 +27,8 @@
 * 2019年4月7日09:43:42 查看vs输出经常有"System.Net.Sockets.SocketException"是正常报错,正在连接对方时被中断或线程中断，但是它过一会就会连接上就不会再报错.主要原因是本项目需要连网控制,所以会连网申请时候会出现该错误.
 * 2019年4月7日11:47:53 "Task.Delay"在.NET 4.0并未出现,需要.NET 4.5才有。若使用的百度sdk不是.NET 4.5的话就出现不必要的bug,而如果想在.NET 4.0实现"Task.Delay"的效果则需要自行参考网上例子.本项目开发的第一版结束.
 * 2019年4月10日14:28:55 相关笔记整理并上传.
+* 2019年4月20日17:12:07 WG2051的.dll更新了V3.6.3,需要把旧版的V3.6替换掉,否则发送报文失败，可从微耕公众号里下载最新版，把dll单独拉出来.
+* 2019年4月28日15:13:51 不能使用并发任务的方式同时打开门锁和摄像头，不知道是否更新了版本问题，之前是正常的，只能使用同步的方式进行.
 
 ##### 购买硬件清单
 * RPI3B(树莓派3B型,只买了一个裸板也ok,没买它的封装盒子,建议也别用3B+)
@@ -47,5 +49,5 @@
 
 ##### 准备开发
 * ![使用vs开发、发布到树莓派环境运行](FacialRecognitionLock/Docs/build_app.md)
-* ![学习并使用opencvsharp进行开发](FacialRecognitionLock/Docs/study_opencvsharp.md)
+* ![学习并使用opencvsharp](FacialRecognitionLock/Docs/study_opencvsharp.md)
 * ![学习并使用百度人脸识别sdk](FacialRecognitionLock/Docs/study_baiduFACESDK.md)

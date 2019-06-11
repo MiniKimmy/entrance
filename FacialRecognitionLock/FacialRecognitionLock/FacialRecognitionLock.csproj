@@ -42,7 +42,8 @@
     <Reference Include="AipSdk">
       <HintPath>..\Tools\AipSdk.dll</HintPath>
     </Reference>
-    <Reference Include="n3kAdrtC">
+    <Reference Include="n3kAdrtC, Version=12.28.32017.1101, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Tools\n3kAdrtC.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
